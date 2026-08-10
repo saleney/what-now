@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Should We Do?</title>
+<style>
+:root{--paper:#faf7ef;--ink:#41483f;--muted:#898a80;--line:#ddd9cd;--green:#718d6c;--dark:#526c4e}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{background:var(--paper);color:var(--ink);font-family:"Trebuchet MS","Avenir Next",system-ui,sans-serif}
+.app{width:min(680px,100%);min-height:100vh;margin:auto;padding:18px 18px 20px;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center}
+.brand{font:italic 15px Georgia,serif;color:var(--dark)}
+.reset{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer}
+main{flex:1;display:flex;align-items:center;justify-content:center}
+.screen{width:100%;text-align:center;padding:18px 0;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.mark{font-size:38px;margin-bottom:15px}
+h1,h2{font-family:Georgia,serif;font-weight:400}
+h1{font-size:clamp(46px,10vw,70px);line-height:.95;margin:0 0 12px}
+.question{font:24px Georgia,serif;margin:0 0 20px}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:min(540px,100%);margin:auto}
+.choice{min-height:92px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.58);color:var(--ink);font:inherit;font-size:17px;font-weight:800;cursor:pointer;padding:12px}
+.choice:hover{background:#fffdf8;transform:translateY(-1px)}
+.emoji{display:block;font-size:31px;margin-bottom:5px}
+.age-sub{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:4px}
+.activity{width:min(570px,100%);margin:auto;text-align:left}
+.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--dark);font-weight:800;margin-bottom:9px}
+.activity-emoji{font-size:40px;margin-bottom:8px}
+h2{font-size:44px;line-height:1;margin:0 0 14px}
+.copy{font:20px/1.45 Georgia,serif;color:#5f645b;margin:0 0 20px}
+.do{background:#eeebe2;border-radius:16px;padding:16px;font-size:16px;line-height:1.45;margin:16px 0}
+.meta{display:flex;gap:12px;color:var(--muted);font-size:12px;margin-bottom:15px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.action{border:0;border-radius:999px;background:var(--green);color:white;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer}
+.secondary{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.note{color:var(--muted);font-size:12px;margin-top:15px}
+footer{text-align:center;color:#aaa99f;font-size:11px}
+@media(max-width:500px){.app{padding:14px}.question{font-size:22px}.choice{min-height:84px;font-size:16px}.activity h2{font-size:38px}.copy{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">a little something</div><button class="reset" onclick="home()">start over</button></header>
+<main id="main"></main>
+<footer>Less consuming. More doing.</footer>
+</div>
+
+<script>
+const activities=[
+/* 2–3 */
+{age:["2-3"],kids:["1"],title:"Treasure Basket",emoji:"🧺",copy:"Put 5 safe household objects in a basket.",do:"Let them explore. Name what they find. Ask: soft or hard? Big or little?",time:"10–15 min",energy:["explore","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["2","3+"],title:"Copy Me",emoji:"🐒",copy:"Take turns making simple movements.",do:"Clap. Stomp. Reach. Turn around. Let each child choose the next one.",time:"5–10 min",energy:["move"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Color Hunt",emoji:"🔴",copy:"Pick one color.",do:"Find three things that color. Then pick a new color.",time:"5–10 min",energy:["explore"],materials:["any","outside"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],"title":"Stuffed Animal Walk",emoji:"🧸",copy:"Take a stuffed animal on an adventure.",do:"Where is it going? What does it need? Let the child lead the story.",time:"10–20 min",energy:["make","explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],"title":"Kitchen Helper",emoji:"🥣",copy:"Give your little helper one real job.",do:"Stir, pour, wash fruit, or move safe ingredients. Talk about what changes as you work.",time:"10–20 min",energy:["make","calm"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],title:"Pillow Path",emoji:"🛋️",copy:"Put a few pillows on the floor.",do:"Step, crawl, or hop from one to the next. Let them choose where the path goes.",time:"10–15 min",energy:["move"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Sound Hunt",emoji:"👂",copy:"Listen for three different sounds.",do:"Find a loud sound, a quiet sound, and a funny sound. Copy each one.",time:"5–10 min",energy:["explore","calm"],materials:["any","outside"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Pour and Scoop",emoji:"🥄",copy:"Use cups and a safe dry material or water.",do:"Scoop, pour, fill, and empty. Let them decide which container is full.",time:"10–20 min",energy:["calm","explore"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],title:"Animal Parade",emoji:"🐘",copy:"Pick three animals.",do:"Walk like each one. Make its sound. Let the child choose the next animal.",time:"5–10 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Big and Little",emoji:"🐘","copy":"Find things that are big and little.",do:"Make two groups. Talk about which one is bigger and which one is smaller.",time:"5–10 min",energy:["explore","calm"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Texture Hunt",emoji:"🖐️",copy:"Find something soft, hard, smooth, and bumpy.",do:"Touch each one and name how it feels.",time:"5–10 min",energy:["explore","calm"],materials:["any","outside"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1"],title:"Where Did It Go?",emoji:"👀",copy:"Hide a familiar toy under one of two cups.",do:"Let the child guess where it went. Make it easy enough to succeed.",time:"5–10 min",energy:["explore"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],"title":"Laundry Helper",emoji:"🧦",copy:"Give them a basket of clean laundry.",do:"Find socks, match easy pairs, or put soft clothes into a pile.",time:"10–15 min",energy:["calm"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],"title":"Bubble Chase",emoji:"🫧",copy:"Make a few bubbles.",do:"Catch them, stomp them, or point to the biggest one.",time:"5–15 min",energy:["move"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],"title":"Animal Homes",emoji:"🏠",copy:"Choose a few toy animals.",do:"Make a home for each one using pillows, boxes, or blankets.",time:"10–20 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],"title":"Nature Noticing",emoji:"🍃",copy:"Go outside and notice three things.",do:"Find something moving, something green, and something tiny.",time:"10–20 min",energy:["explore"],materials:["outside"],adult:"together",mess:"none"},
+
+/* 4–5 */
+{age:["4-5"],kids:["1"],title:"Mystery Bag",emoji:"🕵️",copy:"Put 5 objects in a bag.",do:"Feel one without looking. Guess it. Then make up a reason it ended up in the bag.",time:"10–20 min",energy:["explore","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["2","3+"],"title":"Build a Zoo",emoji:"🦒",copy:"Build a zoo with blocks, boxes, or toys.",do:"Each child chooses an animal. Decide where it lives and what it needs.",time:"20–30 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Invent an Animal",emoji:"🐾",copy:"Make an animal that does not exist.",do:"Give it a name, food, home, sound, and one strange talent.",time:"15–25 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["2","3+"],title:"Restaurant",emoji:"🍽️",copy:"Turn a table into a pretend restaurant.",do:"One person cooks. One serves. One orders. Switch jobs.",time:"20–30 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Shape Detective",emoji:"🔺",copy:"Pick a shape and go looking for it.",do:"Find circles, squares, or triangles around you. Who can find the strangest one?",time:"10–15 min",energy:["explore"],materials:["any","outside"],adult:"supervise",mess:"none"},
+{age:["4-5"],kids:["2","3+"],title:"Animal Rescue",emoji:"🚑",copy:"A stuffed animal needs help.",do:"Decide what happened, make a rescue plan, and bring the animal somewhere safe.",time:"15–25 min",energy:["make","move"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Sink or Float",emoji:"💧",copy:"Choose a few safe objects and make predictions.",do:"Test them in water. Were your guesses right? What surprised you?",time:"10–20 min",energy:["explore"],materials:["any"],adult:"together",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Story Stones",emoji:"🪨",copy:"Choose three small objects or toys.",do:"Each one becomes part of a story. Start with “Once upon a time...”",time:"10–20 min",energy:["make","calm"],materials:["any","outside"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["2","3+"],title:"Obstacle Course",emoji:"🏃",copy:"Make a tiny course with cushions or safe stepping spots.",do:"Crawl, balance, jump, and go around. Let the kids redesign it.",time:"15–25 min",energy:["move"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Nature Faces",emoji:"🍂",copy:"Collect or notice natural shapes.",do:"Arrange leaves, sticks, rocks, or flowers into a funny face. Leave living things where they are.",time:"15–20 min",energy:["make","explore"],materials:["outside"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Dinosaur Rescue",emoji:"🦖",copy:"A dinosaur toy is trapped.",do:"Build a way to rescue it without touching the “lava.”",time:"15–25 min",energy:["make","move"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Color Mixing",emoji:"🎨",copy:"Choose two washable colors.",do:"Predict what happens when they mix. Try it with paint or colored water.",time:"10–20 min",energy:["explore","make"],materials:["make"],adult:"together",mess:"messy"},
+{age:["4-5"],kids:["1","2","3+"],title:"Toy Hospital",emoji:"🩺",copy:"Set up a hospital for stuffed animals.",do:"What is wrong? What does each patient need? Make a waiting room.",time:"20–30 min",energy:["make"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["2","3+"],title:"Mail Delivery",emoji:"📬",copy:"Turn the room into a neighborhood.",do:"Make pretend mail and deliver it to different homes.",time:"15–25 min",energy:["move","make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Cloud Shapes",emoji:"☁️",copy:"Look at clouds or imagine them.",do:"Find an animal, face, or object in a cloud. Make up what it is doing.",time:"10–20 min",energy:["calm","explore"],materials:["outside"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Freeze Dance",emoji:"🎵",copy:"Put on one or two songs.",do:"Dance when the music plays. Freeze when it stops.",time:"5–15 min",energy:["move"],materials:["any"],adult:"together",mess:"none"},
+
+/* 6–8 */
+{age:["6-8"],kids:["1"],title:"Three Object Story",emoji:"📚",copy:"Choose 3 random objects.",do:"Make a story that connects all three. Add one surprising twist.",time:"10–20 min",energy:["make","calm"],materials:["any"],adult:"independent",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Secret Mission",emoji:"🔎",copy:"Create a mission for the group.",do:"Hide a clue. Make two more clues. Can everyone solve it?",time:"20–30 min",energy:["explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Paper Challenge",emoji:"📄",copy:"You get one sheet of paper.",do:"Build the tallest structure you can. Test it. Change your design.",time:"15–25 min",energy:["make"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Invent a Game",emoji:"🎲",copy:"Make up a game with one simple rule.",do:"Play it once. Change the rule. Play again. Which version is better?",time:"20–30 min",energy:["make","move"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Photo Safari",emoji:"📷",copy:"No camera needed. Choose five things to notice outside.",do:"Find something tiny, something old, something moving, something beautiful, and something surprising.",time:"15–30 min",energy:["explore"],materials:["outside"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Backyard Olympics",emoji:"🏅",copy:"Invent three silly events.",do:"Try balancing, tossing, jumping, or another safe challenge. Make up the scoring together.",time:"20–30 min",energy:["move"],materials:["any","outside"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Marble Maze",emoji:"🌀",copy:"Build a maze using cardboard, blocks, books, or tape.",do:"Can you make something roll from one end to the other? Change one part and test it again.",time:"20–30 min",energy:["make","explore"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["6-8"],kids:["1","2","3+"],title:"Nature Collection",emoji:"🍃",copy:"Choose a category, not a quantity.",do:"Find things that are rough, round, tiny, interesting, or a color you choose. Observe without taking living things.",time:"15–30 min",energy:["explore","calm"],materials:["outside"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Restaurant Critic",emoji:"⭐",copy:"Pretend you are reviewing a restaurant.",do:"Taste a snack and rate its crunch, smell, texture, and presentation. Then invent a better version.",time:"10–20 min",energy:["calm","make"],materials:["any"],adult:"together",mess:"little"},
+{age:["6-8"],kids:["1","2","3+"],title:"Make a Comic",emoji:"💬",copy:"Fold paper into a few panels.",do:"Give your character a problem. Draw what happens next. End with a twist.",time:"20–30 min",energy:["make","calm"],materials:["make"],adult:"independent",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Paper Airplane Lab",emoji:"✈️",copy:"Fold one or more paper airplanes.",do:"Change one feature and test which plane flies farther or straighter.",time:"15–25 min",energy:["make","explore"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Secret Code",emoji:"🔐",copy:"Invent a code using shapes, numbers, or symbols.",do:"Write a short message. Trade with someone. Can they crack it?",time:"15–25 min",energy:["make","explore"],materials:["make"],adult:"independent",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Mini Museum",emoji:"🏛️",copy:"Choose five ordinary objects.",do:"Give each one a museum label and explain why it belongs in the collection.",time:"15–25 min",energy:["make","calm"],materials:["any"],adult:"independent",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Build a Playground",emoji:"🛝",copy:"Design a playground for imaginary visitors.",do:"Draw or build it. What makes it fun? What makes it safe?",time:"20–40 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["6-8"],kids:["1","2","3+"],title:"Kitchen Scientist",emoji:"🧪",copy:"Choose two safe ingredients or liquids.",do:"Make a prediction, test it, and describe what changed.",time:"10–20 min",energy:["explore"],materials:["any"],adult:"together",mess:"little"},
+{age:["6-8"],kids:["2","3+"],title:"Scavenger Hunt Maker",emoji:"🗺️",copy:"Make a hunt for someone else.",do:"Hide three clues and give the first clue to your teammate.",time:"20–30 min",energy:["make","explore"],materials:["make","any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Shadow Shapes",emoji:"☀️",copy:"Find a sunny spot and look at shadows.",do:"Trace or imitate a shadow. What changes when you move?",time:"10–20 min",energy:["explore","calm"],materials:["outside"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Rube Goldberg",emoji:"⚙️",copy:"Make one small action cause another.",do:"Use safe household objects to create a chain reaction.",time:"25–40 min",energy:["make","explore"],materials:["make","any"],adult:"supervise",mess:"little"},
+
+/* 9+ */
+{age:["9+"],kids:["1"],title:"Mini Mystery",emoji:"🕵️",copy:"Write down 3 clues about a made-up mystery.",do:"Solve your own mystery. Then make it harder.",time:"15–25 min",energy:["explore","calm"],materials:["make","any"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Design Challenge",emoji:"🛠️",copy:"Choose a problem and build a solution.",do:"Use only what is nearby. Test it. Change one thing. Test again.",time:"25–40 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["9+"],kids:["1","2","3+"],title:"Make a Zine",emoji:"📓",copy:"Fold one sheet of paper into a tiny magazine.",do:"Give it a title. Add drawings, jokes, facts, or a comic.",time:"20–30 min",energy:["make","calm"],materials:["make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Family Debate",emoji:"💬",copy:"Pick a wonderfully unimportant question.",do:"Is cereal soup? Should pets have jobs? Everyone gets a turn.",time:"10–20 min",energy:["calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Build a Better",emoji:"🔧",copy:"Choose something ordinary: a backpack, chair, lunchbox, or toy.",do:"What would you change? Sketch it or build a prototype.",time:"20–40 min",energy:["make"],materials:["make","any"],adult:"independent",mess:"little"},
+{age:["9+"],kids:["2","3+"],title:"Escape Room",emoji:"🔐",copy:"Turn one room into a tiny puzzle.",do:"Hide three clues. Make a final answer. Give everyone a role.",time:"25–45 min",energy:["explore","make"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Teach Me Something",emoji:"🧠",copy:"Pick something you know how to do.",do:"Teach it to someone else without taking over. Let them try, then switch.",time:"10–20 min",energy:["calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Make a Short Film",emoji:"🎬",copy:"Create a one-minute story.",do:"Plan three scenes. Use toys or people as characters. No fancy editing required.",time:"20–40 min",energy:["make"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Neighborhood Map",emoji:"🗺️",copy:"Sketch a map of a familiar walk.",do:"Add landmarks, shortcuts, strange details, or places that only you know.",time:"20–30 min",energy:["explore","make"],materials:["make","outside"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Pitch a Product",emoji:"💡",copy:"Invent something that solves a tiny everyday problem.",do:"Give it a name, draw it, and make a one-minute pitch.",time:"20–30 min",energy:["make"],materials:["make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Mini Documentary",emoji:"🎥",copy:"Choose something ordinary to investigate.",do:"Interview a family member or observe a process. Tell the story in three facts.",time:"20–40 min",energy:["explore","make"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Card Game Designer",emoji:"🃏",copy:"Make a game with paper cards.",do:"Create the goal, rules, and one way to win. Playtest it.",time:"25–40 min",energy:["make"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Photo Scavenger Hunt",emoji:"📸",copy:"Make a list of five things to notice or photograph.",do:"Look for texture, symmetry, a funny detail, a pattern, and something unexpected.",time:"20–30 min",energy:["explore"],materials:["any","outside"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Teach the Family",emoji:"🎓",copy:"Pick something you know a lot about.",do:"Give a five-minute mini lesson. Questions are encouraged.",time:"10–20 min",energy:["calm"],materials:["any"],adult:"together",mess:"none"},
+
+/* mixed ages */
+{age:["mixed"],kids:["2","3+"],title:"Big + Little Build",emoji:"🏗️",copy:"Build something together.",do:"The older child plans. The younger child chooses materials. Switch if you want.",time:"20–30 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Story Relay",emoji:"📖",copy:"One person starts a story.",do:"Go around. Each person adds one sentence or idea.",time:"10–20 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Family Treasure Hunt",emoji:"🗺️",copy:"Make a hunt with clues that can be solved at different levels.",do:"Younger kids can find objects. Older kids can solve clues. Everyone gets a turn.",time:"20–30 min",energy:["explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Build a World",emoji:"🌎",copy:"Start with one box, blanket, block, or toy.",do:"Everyone adds one thing to the world. Nobody can say no to another person's idea.",time:"20–40 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Follow the Leader",emoji:"🐾",copy:"One person leads for one minute.",do:"Move, make sounds, or explore. Then switch leaders.",time:"10–15 min",energy:["move","explore"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Make a Parade",emoji:"🎺",copy:"Choose a silly theme.",do:"Make a sound, movement, or pretend instrument for the parade. Everyone joins.",time:"10–20 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Family Restaurant",emoji:"🍽️",copy:"Everyone gets a restaurant job.",do:"Younger kids can choose food. Older kids can make menus. Adults can be customers.",time:"20–30 min",energy:["make","calm"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Neighborhood Detectives",emoji:"🔍",copy:"Go outside and look for things that change.",do:"Notice shadows, sounds, plants, signs, or people moving through the day.",time:"15–30 min",energy:["explore"],materials:["outside"],adult:"supervise",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Make a Giant Drawing",emoji:"🖍️",copy:"Put a big sheet of paper on the floor or table.",do:"Everyone adds something. Younger children make marks. Older children turn them into a scene.",time:"15–30 min",energy:["make","calm"],materials:["make"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Animal Restaurant",emoji:"🦊",copy:"Open a restaurant for imaginary animals.",do:"Younger kids choose animals. Older kids create the menu. Everyone acts out the customers.",time:"20–30 min",energy:["make"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Obstacle Adventure",emoji:"🧗",copy:"Make a simple movement course.",do:"Younger kids crawl and step. Older kids add challenges or invent new rules.",time:"15–25 min",energy:["move"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Mystery Object",emoji:"❓",copy:"Choose one ordinary object.",do:"Everyone invents a different use for it. Vote on the strangest idea.",time:"10–15 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Family Museum",emoji:"🏛️",copy:"Choose objects everyone agrees are interesting.",do:"Little kids choose. Older kids make labels and give the tour.",time:"20–30 min",energy:["make","calm"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Pillow Camp",emoji:"🏕️",copy:"Build a pretend campsite indoors.",do:"Choose jobs: builder, explorer, cook, storyteller. Everyone contributes something.",time:"20–40 min",energy:["make"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Sound Orchestra",emoji:"🥁",copy:"Find safe things that make different sounds.",do:"Younger kids choose sounds. Older kids become the conductor.",time:"10–20 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Color Picnic",emoji:"🧺",copy:"Pick one color and look for it everywhere.",do:"Younger kids find objects. Older kids make a color story or pattern.",time:"10–20 min",energy:["explore"],materials:["any","outside"],adult:"supervise",mess:"none"}
+,
+/* More 2–3 */
+{age:["2-3"],kids:["1","2","3+"],title:"Tape Road",emoji:"🚗",copy:"Make a road on the floor with painter's tape.",do:"Drive toy cars along it. Add a bridge, a stop, or a place to park.",time:"10–20 min",energy:["make"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Animal Bath",emoji:"🛁",copy:"Give washable toy animals a pretend bath.",do:"Wash, rinse, dry, and name the animals as you go.",time:"10–20 min",energy:["make","calm"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],title:"Kitchen Band",emoji:"🥁",copy:"Find a few safe things that make different sounds.",do:"Tap, shake, or pat. Make a quiet song and a loud song.",time:"5–10 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Find the Match",emoji:"🧦",copy:"Put a few matching objects together.",do:"Find two things that are the same. Then find two that are different.",time:"5–10 min",energy:["explore","calm"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Blanket Picnic",emoji:"🧺",copy:"Put a blanket on the floor.",do:"Have a pretend picnic with stuffed animals, toys, or a real snack.",time:"15–20 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],title:"Window Watch",emoji:"🪟",copy:"Sit by a window for a few minutes.",do:"Look for something moving, something red, and something far away.",time:"5–10 min",energy:["calm","explore"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Sticker Story",emoji:"⭐",copy:"Give them a few large, age-appropriate stickers.",do:"Put them on paper and tell a story about what they made.",time:"10–15 min",energy:["make"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Marching Band",emoji:"🥁",copy:"March around the room together.",do:"March fast, slow, high, low, and stop when the leader stops.",time:"5–10 min",energy:["move"],materials:["any"],adult:"together",mess:"none"},
+{age:["2-3"],kids:["1","2","3+"],title:"Box House",emoji:"📦",copy:"Find a large cardboard box.",do:"Turn it into a house, car, cave, or anything they decide.",time:"15–30 min",energy:["make"],materials:["make"],adult:"supervise",mess:"little"},
+{age:["2-3"],kids:["1","2","3+"],title:"Nature Sounds",emoji:"🌿",copy:"Go outside and listen.",do:"Find a bird sound, a wind sound, and a people sound.",time:"10–20 min",energy:["explore","calm"],materials:["outside"],adult:"together",mess:"none"},
+
+/* More 4–5 */
+{age:["4-5"],kids:["1","2","3+"],title:"Shadow Puppet Show",emoji:"🖐️",copy:"Make simple shapes with your hands near a light.",do:"Give each shadow a character and make a tiny story.",time:"10–20 min",energy:["make","calm"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Treasure Map",emoji:"🗺️",copy:"Draw a simple map of the room or yard.",do:"Mark one hidden treasure. Let someone follow the map.",time:"15–25 min",energy:["make","explore"],materials:["make","outside"],adult:"supervise",mess:"none"},
+{age:["4-5"],kids:["2","3+"],title:"Post Office",emoji:"📮",copy:"Make a pretend post office.",do:"Write or draw mail. Sort it. Deliver it to different people or toys.",time:"15–25 min",energy:["make","move"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"What's Missing?",emoji:"👀",copy:"Put five objects on a table.",do:"Close your eyes while one disappears. Can you figure out what is missing?",time:"5–10 min",energy:["explore","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Dinosaur Footprints",emoji:"🦖",copy:"Pretend a dinosaur walked through the room.",do:"Follow its footprints. Where did it go? What did it leave behind?",time:"10–20 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["2","3+"],title:"Build a Bridge",emoji:"🌉",copy:"Build a bridge for a toy using blocks, cardboard, or books.",do:"Can the toy cross? What could make the bridge stronger?",time:"15–25 min",energy:["make","explore"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"Animal Sounds",emoji:"🐸",copy:"Choose three animals.",do:"Make their sounds without saying their names. Can everyone guess?",time:"5–10 min",energy:["move","explore"],materials:["any"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Leaf Soup",emoji:"🍲",copy:"Outside, gather fallen leaves and sticks.",do:"Make pretend soup. What is in it? What does it smell like?",time:"15–25 min",energy:["make","explore"],materials:["outside"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["2","3+"],title:"Freeze Like a Statue",emoji:"🗿",copy:"Call out an animal, feeling, or object.",do:"Everyone freezes as that thing. One person is the statue judge.",time:"5–15 min",energy:["move"],materials:["any"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Tiny Garden",emoji:"🌱",copy:"Look at a plant or make a pretend garden.",do:"What would your garden grow? Who lives there?",time:"15–25 min",energy:["make","calm"],materials:["outside","any"],adult:"supervise",mess:"little"},
+{age:["4-5"],kids:["1","2","3+"],title:"What Would You Pack?",emoji:"🎒",copy:"Pretend you're going on a surprising trip.",do:"Choose five things to pack. Explain what each one is for.",time:"10–15 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["4-5"],kids:["2","3+"],title:"Delivery Service",emoji:"🚚",copy:"Set up pretend deliveries around the house.",do:"Give each child a package and a destination. Switch jobs.",time:"15–25 min",energy:["move","make"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["4-5"],kids:["1","2","3+"],title:"Rainy Day Detective",emoji:"🌧️",copy:"Look closely at what rain changes.",do:"Find a puddle, a reflection, a wet leaf, or a new sound.",time:"15–25 min",energy:["explore"],materials:["outside"],adult:"supervise",mess:"little"},
+
+/* More 6–8 */
+{age:["6-8"],kids:["1","2","3+"],title:"Domino Challenge",emoji:"🁢",copy:"Make a line of objects that can knock each other over.",do:"Predict where the chain will stop. Change one part and test again.",time:"15–30 min",energy:["make","explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Blind Drawing",emoji:"✏️",copy:"One person describes a simple picture without showing it.",do:"The other person draws from the description. Compare the results.",time:"10–20 min",energy:["calm"],materials:["make"],adult:"together",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Household Scavenger Hunt",emoji:"🔍",copy:"Find something that is older than you, smaller than your hand, and used every day.",do:"Add two categories of your own.",time:"10–20 min",energy:["explore"],materials:["any"],adult:"independent",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Human Knot",emoji:"🪢",copy:"Stand in a small circle and carefully connect hands.",do:"Work together to untangle without letting go.",time:"10–15 min",energy:["move"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Bottle Flip Science",emoji:"🧴",copy:"Make a prediction about a safe bottle flip.",do:"Change one variable such as water amount. Test several times.",time:"15–25 min",energy:["explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Make a Board Game",emoji:"🎲",copy:"Draw a path from start to finish.",do:"Add rules, choices, and one surprise. Playtest it.",time:"25–45 min",energy:["make"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Restaurant Challenge",emoji:"🍳",copy:"Invent a restaurant with one unusual rule.",do:"Create a menu and act out a customer who has a very strange request.",time:"20–30 min",energy:["make"],materials:["any"],adult:"together",mess:"little"},
+{age:["6-8"],kids:["1","2","3+"],title:"Nature Architect",emoji:"🏗️",copy:"Look at a structure outside.",do:"How does it stay up? Sketch it or build your own version.",time:"20–30 min",energy:["explore","make"],materials:["outside","make"],adult:"supervise",mess:"little"},
+{age:["6-8"],kids:["2","3+"],title:"Story in Six Words",emoji:"✍️",copy:"Tell a whole story in six words.",do:"Read them aloud. Can someone guess the story you imagined?",time:"10–15 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Make a Stop Motion",emoji:"🎬",copy:"Use toys and a simple camera or tablet if you already have one.",do:"Move one thing a tiny bit at a time. Make a short story.",time:"20–40 min",energy:["make"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Mystery Sound",emoji:"👂",copy:"One person makes a sound out of sight.",do:"Everyone else guesses how it was made.",time:"10–15 min",energy:["explore","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["6-8"],kids:["1","2","3+"],title:"Balance Challenge",emoji:"⚖️",copy:"Find three safe objects you can balance.",do:"Predict which arrangement will work best, then test it.",time:"10–20 min",energy:["explore","make"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["6-8"],kids:["2","3+"],title:"Compliment Mail",emoji:"💌",copy:"Write or draw a tiny note for someone in the family.",do:"Deliver it secretly or read it aloud.",time:"10–15 min",energy:["calm","make"],materials:["make"],adult:"independent",mess:"none"},
+
+/* More 9+ */
+{age:["9+"],kids:["1","2","3+"],title:"One Hour Without a Screen",emoji:"⌛",copy:"Choose one small project you can finish before the hour ends.",do:"Make a plan, start a timer, and see how far you get.",time:"30–60 min",energy:["make"],materials:["any"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Paper Tower Tournament",emoji:"🏗️",copy:"Each team gets the same paper.",do:"Build the tallest freestanding tower. Test it and compare designs.",time:"20–30 min",energy:["make"],materials:["make"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Neighborhood Field Notes",emoji:"📓",copy:"Go for a walk with a notebook.",do:"Record five observations. No opinions, just details.",time:"20–40 min",energy:["explore","calm"],materials:["outside","make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Create a Quiz",emoji:"❓",copy:"Choose a topic everyone knows a little about.",do:"Write five questions. Trade quizzes. Add one trick question.",time:"15–25 min",energy:["make","calm"],materials:["make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Reverse Engineering",emoji:"🔧",copy:"Choose an ordinary object.",do:"Without breaking it, figure out what parts make it work.",time:"20–30 min",energy:["explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"Tiny Business",emoji:"💰",copy:"Invent a business that solves a tiny problem.",do:"Choose the product, price, customer, and one way to advertise it.",time:"20–40 min",energy:["make"],materials:["make","any"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],"title":"Write a One-Page Play",emoji:"🎭",copy:"Create three characters and one problem.",do:"Write a beginning, middle, and ending. Perform it if you want.",time:"25–40 min",energy:["make"],materials:["make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["2","3+"],"title":"Family Game Show",emoji:"🎤",copy:"Create three rounds of questions or challenges.",do:"One person hosts. Everyone else competes. Switch host.",time:"20–30 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Design a Tiny Home",emoji:"🏠",copy:"Imagine you have one small room.",do:"Draw a floor plan. What would you keep? What would you remove?",time:"20–30 min",energy:["make","calm"],materials:["make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["2","3+"],title:"The Impossible Invention",emoji:"💡",copy:"Invent something that breaks one annoying everyday rule.",do:"Draw it, name it, and explain why someone would want it.",time:"15–25 min",energy:["make"],materials:["make"],adult:"independent",mess:"none"},
+{age:["9+"],kids:["1","2","3+"],title:"Family Podcast",emoji:"🎙️",copy:"Choose one question worth discussing.",do:"Record a short conversation if you want, or simply interview each other.",time:"15–25 min",energy:["calm"],materials:["any"],adult:"together",mess:"none"},
+
+/* More mixed ages */
+{age:["mixed"],kids:["2","3+"],title:"Build a Playground",emoji:"🛝",copy:"Design one playground together.",do:"Little kids choose colors or places. Older kids solve how the pieces fit.",time:"20–40 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Family Scavenger Hunt",emoji:"🗺️",copy:"Make five things to find.",do:"Younger kids look for objects. Older kids can solve clues or riddles.",time:"15–30 min",energy:["explore"],materials:["any"],adult:"supervise",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Stuffed Animal Hotel",emoji:"🏨",copy:"Open a hotel for toys.",do:"Little kids choose rooms. Older kids make signs, rules, and a check-in desk.",time:"20–30 min",energy:["make"],materials:["any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Giant Story Map",emoji:"🗺️",copy:"Draw one big place together.",do:"Younger kids add people or animals. Older kids add roads, problems, and places to explore.",time:"20–40 min",energy:["make"],materials:["make"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Kitchen Helper Team",emoji:"🥣",copy:"Make one simple snack together.",do:"Give everyone a job that fits their age: washing, pouring, measuring, arranging, or serving.",time:"15–30 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Nature Color Hunt",emoji:"🌈",copy:"Choose three colors before you go outside.",do:"Younger kids spot them. Older kids notice patterns, textures, or where each color appears.",time:"15–25 min",energy:["explore"],materials:["outside"],adult:"supervise",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Family Construction Crew",emoji:"👷",copy:"Build one structure together.",do:"Little kids carry and place safe materials. Older kids plan and test the structure.",time:"20–35 min",energy:["make"],materials:["make","any"],adult:"supervise",mess:"little"},
+{age:["mixed"],kids:["2","3+"],title:"Guess My Animal",emoji:"🐾",copy:"One person chooses an animal.",do:"Younger kids can act it out. Older kids can give clues without saying the name.",time:"10–15 min",energy:["move","explore"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Indoor Campfire",emoji:"🔥",copy:"Make a pretend campfire with blankets or paper.",do:"Tell stories, sing, or invent a creature that lives nearby.",time:"20–30 min",energy:["make","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Family Parade Route",emoji:"🎺",copy:"Plan a short parade route.",do:"Little kids choose the movement. Older kids make signs, rules, or a route.",time:"15–25 min",energy:["move","make"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Mystery Box",emoji:"📦",copy:"Put one ordinary object in a box.",do:"Younger kids guess by touch. Older kids invent clues and stories about it.",time:"10–20 min",energy:["explore","calm"],materials:["any"],adult:"together",mess:"none"},
+{age:["mixed"],kids:["2","3+"],title:"Family Movie Without a Movie",emoji:"🎬",copy:"Make your own tiny scene.",do:"Younger kids act. Older kids direct. Everyone gets a role.",time:"20–30 min",energy:["make"],materials:["any"],adult:"supervise",mess:"none"}
+];
+
+let state={age:null,kids:null};
+
+function render(x){document.getElementById("main").innerHTML=`<section class="screen">${x}</section>`}
+
+function home(){
+ state={age:null,kids:null,mode:null,stuff:null};
+ render(`
+  <div class="mark">✦</div>
+  <h1>Hmm.</h1>
+  <div class="question">What kind of moment are you having?</div>
+  <div class="choices">
+   <button class="choice" onclick="pickMode('bored')"><span class="emoji">😐</span>We're bored</button>
+   <button class="choice" onclick="pickMode('move')"><span class="emoji">⚡</span>We need to move</button>
+   <button class="choice" onclick="pickMode('make')"><span class="emoji">🎨</span>We want to make something</button>
+   <button class="choice" onclick="pickMode('calm')"><span class="emoji">🌙</span>We need something calm</button>
+   <button class="choice" onclick="pickMode('explore')" style="grid-column:1/-1"><span class="emoji">🔎</span>Let's see what happens</button>
+  </div>
+ `);
+}
+
+function pickMode(mode){
+ state.mode=mode;
+ render(`
+  <div class="mark">✦</div>
+  <div class="question">How old are they?</div>
+  <div class="choices">
+   <button class="choice" onclick="pickAge('2-3')"><span class="emoji">🌱</span>Toddlers<span class="age-sub">2–3 years</span></button>
+   <button class="choice" onclick="pickAge('4-5')"><span class="emoji">🪁</span>Preschoolers<span class="age-sub">4–5 years</span></button>
+   <button class="choice" onclick="pickAge('6-8')"><span class="emoji">🔭</span>Big Kids<span class="age-sub">6–8 years</span></button>
+   <button class="choice" onclick="pickAge('9+')"><span class="emoji">🧭</span>Older Kids<span class="age-sub">9+ years</span></button>
+   <button class="choice" onclick="pickAge('mixed')" style="grid-column:1/-1"><span class="emoji">👧🧒</span>Mixed Ages<span class="age-sub">Different ages together</span></button>
+  </div>
+ `);
+}
+function pickAge(age){
+ state.age=age;
+ render(`
+  <div class="mark">✦</div>
+  <div class="question">What do we have to work with?</div>
+  <div class="choices">
+   <button class="choice" onclick="pickStuff('around')"><span class="emoji">🏠</span>Just what's around</button>
+   <button class="choice" onclick="pickStuff('make')"><span class="emoji">🎨</span>Stuff to make with</button>
+   <button class="choice" onclick="pickStuff('outside')"><span class="emoji">🌳</span>We can go outside</button>
+   <button class="choice" onclick="pickStuff('somewhere')"><span class="emoji">🚗</span>We can go somewhere</button>
+   <button class="choice" onclick="pickStuff('anything')" style="grid-column:1/-1"><span class="emoji">🤷</span>Anything goes</button>
+  </div>
+ `);
+}
+
+function pickStuff(stuff){
+ state.stuff=stuff;
+ render(`
+  <div class="mark">✦</div>
+  <div class="question">How many kids?</div>
+  <div class="choices">
+   <button class="choice" onclick="pickKids('1')"><span class="emoji">👤</span>1</button>
+   <button class="choice" onclick="pickKids('2')"><span class="emoji">👥</span>2</button>
+   <button class="choice" onclick="pickKids('3+')"><span class="emoji">👨‍👩‍👧</span>3+</button>
+  </div>
+ `);
+}
+function pickKids(kids){
+ state.kids=kids;
+ render(`
+  <div class="mark">✦</div>
+  <div class="question">Hmm...</div>
+ `);
+ setTimeout(showActivity, 450);
+}
+function showActivity(){
+ let pool=activities.filter(a=>a.age.includes(state.age)&&a.kids.includes(state.kids));
+ if(!pool.length) pool=activities.filter(a=>a.age.includes(state.age));
+
+ const modeMap={
+  move:["move"], make:["make"], calm:["calm"], explore:["explore"],
+  bored:["move","make","explore","calm"]
+ };
+ if(state.mode && modeMap[state.mode]){
+  const modePool=pool.filter(a=>modeMap[state.mode].some(m=>a.energy && a.energy.includes(m)));
+  if(modePool.length) pool=modePool;
+ }
+
+ const stuffMap={
+  around:["any"], make:["make","any"], outside:["outside","any"],
+  somewhere:["outside","any"], anything:["any","make","move","calm","explore"]
+ };
+ if(state.stuff && stuffMap[state.stuff]){
+  const stuffPool=pool.filter(a=>stuffMap[state.stuff].some(m=>a.materials && a.materials.includes(m)));
+  if(stuffPool.length) pool=stuffPool;
+ }
+
+ if(!pool.length) pool=activities;
+
+ const a=pool[Math.floor(Math.random()*pool.length)];
+ current=a;
+
+ render(`
+  <div class="activity">
+   <div class="kicker">${state.age==="mixed"?"mixed ages":"for "+state.age}</div>
+   <div class="activity-emoji">${a.emoji}</div>
+   <h2>${a.title}</h2>
+   <p class="copy">${a.copy}</p>
+   <div class="do"><strong>Try this:</strong><br>${a.do}</div>
+   <div class="meta">
+    <span>⏱ ${a.time}</span>
+    <span>👧 ${state.kids} ${state.kids==="1"?"child":"children"}</span>
+    ${a.adult?`<span>👋 ${a.adult==="together"?"do it together":a.adult==="supervise"?"mostly supervise":"they can try it themselves"}</span>`:""}
+    ${a.mess?`<span>🧹 ${a.mess}</span>`:""}
+   </div>
+   <div class="actions">
+    <button class="action" onclick="showActivity()">↻ Another</button>
+    <button class="action secondary" onclick="home()">Start over</button>
+   </div>
+   <div class="note">Follow their curiosity. Change it if they take it somewhere better.</div>
+  </div>
+ `);
+}
+home();
+</script>
+</body>
+</html>
