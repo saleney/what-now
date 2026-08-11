@@ -24,6 +24,9 @@ h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.055em}
 .salene-home-link{position:fixed;z-index:20;bottom:14px;left:50%;margin:0;padding:8px 11px;border:2px solid var(--line);border-radius:999px;background:#fffdf7;color:var(--ink);box-shadow:2px 2px 0 var(--line);font-size:10px;text-decoration:none;transform:translateX(-50%)}.salene-home-link:hover,.salene-home-link:focus-visible{background:var(--yellow);outline:2px solid var(--line);outline-offset:2px}
 .salene-home-link{position:static;z-index:auto;display:inline-block;margin-top:9px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--ink);font:inherit;text-decoration:none;transform:none}.salene-home-link:hover,.salene-home-link:focus-visible{background:transparent;text-decoration:underline;outline:none}
 .salene-home-link{display:inline-block;margin-top:12px;padding:8px 11px;border:2px solid #293c3b;border-radius:999px;background:#fffdf7;color:#293c3b;box-shadow:2px 2px 0 #293c3b;font:10px "DM Mono",monospace;text-decoration:none}.salene-home-link:hover,.salene-home-link:focus-visible{background:#ffe477;text-decoration:none;outline:2px solid #293c3b;outline-offset:2px}
+
+.activity-doodle{width:58px;height:58px;display:grid;place-items:center;margin:0 0 11px;border:3px solid var(--line);border-radius:49% 51% 41% 59%;background:var(--pink);box-shadow:3px 4px 0 rgba(41,60,59,.2);font:700 35px/1 Fraunces,Georgia,serif;transform:rotate(-6deg)}
+button,input,select{font-family:"Space Grotesk",system-ui,sans-serif}
 </style>
 </head>
 <body>
@@ -34,6 +37,13 @@ h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.055em}
 </div>
 
 <script>
+const customMarks = ["✦","◌","△","〰","◇","＋","?","!"];
+function customMark(text) {
+  let total = 0;
+  for (const char of String(text)) total += char.codePointAt(0);
+  return customMarks[total % customMarks.length];
+}
+
 const activities=[
 /* 2–3 */
 {age:["2-3"],kids:["1"],title:"Treasure Basket",emoji:"🧺",copy:"Put 5 safe household objects in a basket.",do:"Let them explore. Name what they find. Ask: soft or hard? Big or little?",time:"10–15 min",energy:["explore","calm"],materials:["any"],adult:"together",mess:"none"},
@@ -294,7 +304,7 @@ function showActivity(){
  render(`
   <div class="activity">
    <div class="kicker">${state.age==="mixed"?"mixed ages":"for "+state.age}</div>
-   <div class="activity-emoji">${a.emoji}</div>
+   <div class="activity-doodle" aria-hidden="true">${customMark(a.title)}</div>
    <h2>${a.title}</h2>
    <p class="copy">${a.copy}</p>
    <div class="do"><strong>Try this:</strong><br>${a.do}</div>
