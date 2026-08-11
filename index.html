@@ -5,45 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>What Should We Do?</title>
 <style>
-:root{--paper:#faf7ef;--ink:#41483f;--muted:#898a80;--line:#ddd9cd;--green:#718d6c;--dark:#526c4e}
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@500;700&display=swap');
+:root{--paper:#fff8e8;--ink:#293c3b;--muted:#6d756e;--line:#293c3b;--green:#8fc986;--pink:#f59db5;--yellow:#ffe477;--blue:#9bd8e7}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%}
-body{background:var(--paper);color:var(--ink);font-family:"Trebuchet MS","Avenir Next",system-ui,sans-serif}
-.app{width:min(680px,100%);min-height:100vh;margin:auto;padding:18px 18px 20px;display:flex;flex-direction:column}
-header{display:flex;justify-content:space-between;align-items:center}
-.brand{font:italic 15px Georgia,serif;color:var(--dark)}
-.reset{border:0;background:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer}
+body{background:radial-gradient(circle at 8% 11%,rgba(255,228,119,.55) 0 42px,transparent 43px),radial-gradient(circle at 92% 17%,rgba(155,216,231,.5) 0 65px,transparent 66px),radial-gradient(circle at 20% 88%,rgba(245,157,181,.36) 0 52px,transparent 53px),var(--paper);color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif}
+.app{width:min(720px,100%);min-height:100vh;margin:auto;padding:21px 18px;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 2px}
+.brand{font:11px "DM Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.reset{border:2px solid transparent;border-radius:99px;background:none;color:var(--muted);font:11px "DM Mono",monospace;cursor:pointer;padding:7px 9px}.reset:hover,.reset:focus-visible{border-color:var(--line);color:var(--ink);outline:none}
 main{flex:1;display:flex;align-items:center;justify-content:center}
-.screen{width:100%;text-align:center;padding:18px 0;animation:in .25s ease}
-@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.mark{font-size:38px;margin-bottom:15px}
-h1,h2{font-family:Georgia,serif;font-weight:400}
-h1{font-size:clamp(46px,10vw,70px);line-height:.95;margin:0 0 12px}
-.question{font:24px Georgia,serif;margin:0 0 20px}
-.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:min(540px,100%);margin:auto}
-.choice{min-height:92px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.58);color:var(--ink);font:inherit;font-size:17px;font-weight:800;cursor:pointer;padding:12px}
-.choice:hover{background:#fffdf8;transform:translateY(-1px)}
-.emoji{display:block;font-size:31px;margin-bottom:5px}
-.age-sub{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:4px}
-.activity{width:min(570px,100%);margin:auto;text-align:left}
-.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--dark);font-weight:800;margin-bottom:9px}
-.activity-emoji{font-size:40px;margin-bottom:8px}
-h2{font-size:44px;line-height:1;margin:0 0 14px}
-.copy{font:20px/1.45 Georgia,serif;color:#5f645b;margin:0 0 20px}
-.do{background:#eeebe2;border-radius:16px;padding:16px;font-size:16px;line-height:1.45;margin:16px 0}
-.meta{display:flex;gap:12px;color:var(--muted);font-size:12px;margin-bottom:15px}
-.actions{display:flex;gap:9px;flex-wrap:wrap}
-.action{border:0;border-radius:999px;background:var(--green);color:white;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer}
-.secondary{background:transparent;color:var(--muted);border:1px solid var(--line)}
-.note{color:var(--muted);font-size:12px;margin-top:15px}
-footer{text-align:center;color:#aaa99f;font-size:11px}
-@media(max-width:500px){.app{padding:14px}.question{font-size:22px}.choice{min-height:84px;font-size:16px}.activity h2{font-size:38px}.copy{font-size:18px}}
+.screen{width:100%;text-align:center;padding:28px 0;animation:in .32s ease}@keyframes in{from{opacity:0;transform:translateY(9px) rotate(.3deg)}to{opacity:1;transform:none}}
+.mark{width:62px;height:62px;display:grid;place-items:center;margin:0 auto 15px;border:2px solid var(--line);border-radius:48% 52% 42% 58%;background:var(--yellow);box-shadow:4px 5px 0 rgba(41,60,59,.22);font-size:31px;transform:rotate(-8deg)}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.055em}h1{font-size:clamp(3.4rem,12vw,5.8rem);line-height:.84;margin:0 0 18px}.question{max-width:560px;margin:0 auto 23px;font:clamp(1.35rem,4vw,2rem)/1.1 Fraunces,Georgia,serif;letter-spacing:-.035em}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;width:min(580px,100%);margin:auto}.choice{min-height:105px;border:2px solid var(--line);border-radius:22px;background:#fffdf7;box-shadow:3px 4px 0 rgba(41,60,59,.2);color:var(--ink);font:700 1rem "Space Grotesk",system-ui,sans-serif;cursor:pointer;padding:13px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}.choice:hover,.choice:focus-visible{background:#dff4ea;transform:translate(-2px,-4px) rotate(-.5deg);box-shadow:7px 9px 0 rgba(41,60,59,.2);outline:none}.emoji{display:block;font-size:34px;margin-bottom:6px}.doodle{width:40px;height:40px;display:grid;place-items:center;margin:0 auto 7px;border:2px solid currentColor;border-radius:48% 52% 43% 57%;background:var(--yellow);box-shadow:2px 2px 0 rgba(41,60,59,.18);font:27px/1 Fraunces,Georgia,serif;transform:rotate(-7deg)}.doodle.mint{background:var(--green)}.doodle.pink{background:var(--pink)}.doodle.blue{background:var(--blue)}.doodle:nth-child(even){transform:rotate(6deg)}.age-sub{display:block;font:10px "DM Mono",monospace;color:var(--muted);margin-top:5px}
+.activity{width:min(590px,100%);margin:auto;padding:26px;text-align:left;border:3px solid var(--line);border-radius:35px 18px 42px 22px;background:rgba(255,255,255,.76);box-shadow:7px 9px 0 rgba(41,60,59,.2)}.kicker{font:10px "DM Mono",monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}.activity-emoji{font-size:47px;margin-bottom:6px}h2{font-size:clamp(2.55rem,8vw,4rem);line-height:.9;margin:0 0 15px}.copy{font:1.22rem/1.4 Fraunces,Georgia,serif;margin:0 0 19px}.do{border:2px dashed var(--line);border-radius:17px;background:#fff0bf;padding:15px;font-size:.96rem;line-height:1.45;margin:16px 0}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font:10px "DM Mono",monospace;margin-bottom:18px}.actions{display:flex;gap:9px;flex-wrap:wrap}.action{border:2px solid var(--line);border-radius:99px;background:var(--green);box-shadow:3px 3px 0 var(--line);color:var(--ink);padding:11px 17px;font:700 .9rem "Space Grotesk",sans-serif;cursor:pointer}.action:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}.secondary{background:#fff;color:var(--ink)}.note{color:var(--muted);font:italic .9rem/1.4 Fraunces,Georgia,serif;margin-top:18px}footer{text-align:center;color:var(--muted);font:10px "DM Mono",monospace;padding-top:10px}
+@media(max-width:500px){.app{padding:14px}.screen{padding:20px 0}.question{font-size:1.45rem}.choices{gap:9px}.choice{min-height:91px;font-size:.9rem;padding:10px}.activity{padding:21px 17px}.copy{font-size:1.1rem}.do{font-size:.9rem}}
+.salene-home-link{display:inline-block;margin-top:9px;color:var(--ink);text-decoration:none}.salene-home-link:hover,.salene-home-link:focus-visible{text-decoration:underline;outline:none}
 </style>
 </head>
 <body>
 <div class="app">
 <header><div class="brand">a little something</div><button class="reset" onclick="home()">start over</button></header>
 <main id="main"></main>
-<footer>Less consuming. More doing.</footer>
+<footer>Less consuming. More doing.<br><a class="salene-home-link" href="https://saleney.github.io/">← back to Salene’s Corner</a></footer>
 </div>
 
 <script>
@@ -219,11 +203,11 @@ function home(){
   <h1>Hmm.</h1>
   <div class="question">What kind of moment are you having?</div>
   <div class="choices">
-   <button class="choice" onclick="pickMode('bored')"><span class="emoji">😐</span>We're bored</button>
-   <button class="choice" onclick="pickMode('move')"><span class="emoji">⚡</span>We need to move</button>
-   <button class="choice" onclick="pickMode('make')"><span class="emoji">🎨</span>We want to make something</button>
-   <button class="choice" onclick="pickMode('calm')"><span class="emoji">🌙</span>We need something calm</button>
-   <button class="choice" onclick="pickMode('explore')" style="grid-column:1/-1"><span class="emoji">🔎</span>Let's see what happens</button>
+   <button class="choice" onclick="pickMode('bored')"><span class="doodle pink" aria-hidden="true">✦</span>We're bored</button>
+   <button class="choice" onclick="pickMode('move')"><span class="doodle mint" aria-hidden="true">↟</span>We need to move</button>
+   <button class="choice" onclick="pickMode('make')"><span class="doodle yellow" aria-hidden="true">✎</span>We want to make something</button>
+   <button class="choice" onclick="pickMode('calm')"><span class="doodle blue" aria-hidden="true">☾</span>We need something calm</button>
+   <button class="choice" onclick="pickMode('explore')" style="grid-column:1/-1"><span class="doodle mint" aria-hidden="true">⌕</span>Let's see what happens</button>
   </div>
  `);
 }
@@ -234,11 +218,11 @@ function pickMode(mode){
   <div class="mark">✦</div>
   <div class="question">How old are they?</div>
   <div class="choices">
-   <button class="choice" onclick="pickAge('2-3')"><span class="emoji">🌱</span>Toddlers<span class="age-sub">2–3 years</span></button>
-   <button class="choice" onclick="pickAge('4-5')"><span class="emoji">🪁</span>Preschoolers<span class="age-sub">4–5 years</span></button>
-   <button class="choice" onclick="pickAge('6-8')"><span class="emoji">🔭</span>Big Kids<span class="age-sub">6–8 years</span></button>
-   <button class="choice" onclick="pickAge('9+')"><span class="emoji">🧭</span>Older Kids<span class="age-sub">9+ years</span></button>
-   <button class="choice" onclick="pickAge('mixed')" style="grid-column:1/-1"><span class="emoji">👧🧒</span>Mixed Ages<span class="age-sub">Different ages together</span></button>
+   <button class="choice" onclick="pickAge('2-3')"><span class="doodle mint" aria-hidden="true">◌</span>Toddlers<span class="age-sub">2–3 years</span></button>
+   <button class="choice" onclick="pickAge('4-5')"><span class="doodle pink" aria-hidden="true">〰</span>Preschoolers<span class="age-sub">4–5 years</span></button>
+   <button class="choice" onclick="pickAge('6-8')"><span class="doodle blue" aria-hidden="true">◉</span>Big Kids<span class="age-sub">6–8 years</span></button>
+   <button class="choice" onclick="pickAge('9+')"><span class="doodle yellow" aria-hidden="true">⊹</span>Older Kids<span class="age-sub">9+ years</span></button>
+   <button class="choice" onclick="pickAge('mixed')" style="grid-column:1/-1"><span class="doodle mint" aria-hidden="true">☼</span>Mixed Ages<span class="age-sub">Different ages together</span></button>
   </div>
  `);
 }
@@ -248,11 +232,11 @@ function pickAge(age){
   <div class="mark">✦</div>
   <div class="question">What do we have to work with?</div>
   <div class="choices">
-   <button class="choice" onclick="pickStuff('around')"><span class="emoji">🏠</span>Just what's around</button>
-   <button class="choice" onclick="pickStuff('make')"><span class="emoji">🎨</span>Stuff to make with</button>
-   <button class="choice" onclick="pickStuff('outside')"><span class="emoji">🌳</span>We can go outside</button>
-   <button class="choice" onclick="pickStuff('somewhere')"><span class="emoji">🚗</span>We can go somewhere</button>
-   <button class="choice" onclick="pickStuff('anything')" style="grid-column:1/-1"><span class="emoji">🤷</span>Anything goes</button>
+   <button class="choice" onclick="pickStuff('around')"><span class="doodle pink" aria-hidden="true">⌂</span>Just what's around</button>
+   <button class="choice" onclick="pickStuff('make')"><span class="doodle yellow" aria-hidden="true">✎</span>Stuff to make with</button>
+   <button class="choice" onclick="pickStuff('outside')"><span class="doodle mint" aria-hidden="true">♧</span>We can go outside</button>
+   <button class="choice" onclick="pickStuff('somewhere')"><span class="doodle blue" aria-hidden="true">⇢</span>We can go somewhere</button>
+   <button class="choice" onclick="pickStuff('anything')" style="grid-column:1/-1"><span class="doodle pink" aria-hidden="true">✺</span>Anything goes</button>
   </div>
  `);
 }
@@ -263,9 +247,9 @@ function pickStuff(stuff){
   <div class="mark">✦</div>
   <div class="question">How many kids?</div>
   <div class="choices">
-   <button class="choice" onclick="pickKids('1')"><span class="emoji">👤</span>1</button>
-   <button class="choice" onclick="pickKids('2')"><span class="emoji">👥</span>2</button>
-   <button class="choice" onclick="pickKids('3+')"><span class="emoji">👨‍👩‍👧</span>3+</button>
+   <button class="choice" onclick="pickKids('1')"><span class="doodle yellow" aria-hidden="true">●</span>1</button>
+   <button class="choice" onclick="pickKids('2')"><span class="doodle blue" aria-hidden="true">◌◌</span>2</button>
+   <button class="choice" onclick="pickKids('3+')"><span class="doodle mint" aria-hidden="true">✦✦</span>3+</button>
   </div>
  `);
 }
