@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Should We Do?</title>
+<title>What Should We Do? — Screen-Free Ideas for Kids</title>
+<meta name="description" content="A gentle activity picker for parents of bored kids.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@500;700&display=swap');
 :root{--paper:#fff8e8;--ink:#293c3b;--muted:#6d756e;--line:#293c3b;--green:#8fc986;--pink:#f59db5;--yellow:#ffe477;--blue:#9bd8e7}
@@ -20,6 +21,7 @@ h1,h2{font-family:Fraunces,Georgia,serif;font-weight:700;letter-spacing:-.055em}
 .choices{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;width:min(580px,100%);margin:auto}.choice{min-height:105px;border:2px solid var(--line);border-radius:22px;background:#fffdf7;box-shadow:3px 4px 0 rgba(41,60,59,.2);color:var(--ink);font:700 1rem "Space Grotesk",system-ui,sans-serif;cursor:pointer;padding:13px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}.choice:hover,.choice:focus-visible{background:#dff4ea;transform:translate(-2px,-4px) rotate(-.5deg);box-shadow:7px 9px 0 rgba(41,60,59,.2);outline:none}.emoji{display:block;font-size:34px;margin-bottom:6px}.doodle{width:40px;height:40px;display:grid;place-items:center;margin:0 auto 7px;border:2px solid currentColor;border-radius:48% 52% 43% 57%;background:var(--yellow);box-shadow:2px 2px 0 rgba(41,60,59,.18);font:27px/1 Fraunces,Georgia,serif;transform:rotate(-7deg)}.doodle.mint{background:var(--green)}.doodle.pink{background:var(--pink)}.doodle.blue{background:var(--blue)}.doodle:nth-child(even){transform:rotate(6deg)}.age-sub{display:block;font:10px "DM Mono",monospace;color:var(--muted);margin-top:5px}
 .activity{width:min(590px,100%);margin:auto;padding:26px;text-align:left;border:3px solid var(--line);border-radius:35px 18px 42px 22px;background:rgba(255,255,255,.76);box-shadow:7px 9px 0 rgba(41,60,59,.2)}.kicker{font:10px "DM Mono",monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:11px}.activity-emoji{font-size:47px;margin-bottom:6px}h2{font-size:clamp(2.55rem,8vw,4rem);line-height:.9;margin:0 0 15px}.copy{font:1.22rem/1.4 Fraunces,Georgia,serif;margin:0 0 19px}.do{border:2px dashed var(--line);border-radius:17px;background:#fff0bf;padding:15px;font-size:.96rem;line-height:1.45;margin:16px 0}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font:10px "DM Mono",monospace;margin-bottom:18px}.actions{display:flex;gap:9px;flex-wrap:wrap}.action{border:2px solid var(--line);border-radius:99px;background:var(--green);box-shadow:3px 3px 0 var(--line);color:var(--ink);padding:11px 17px;font:700 .9rem "Space Grotesk",sans-serif;cursor:pointer}.action:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}.secondary{background:#fff;color:var(--ink)}.note{color:var(--muted);font:italic .9rem/1.4 Fraunces,Georgia,serif;margin-top:18px}footer{text-align:center;color:var(--muted);font:10px "DM Mono",monospace;padding-top:10px}
 @media(max-width:500px){.app{padding:14px}.screen{padding:20px 0}.question{font-size:1.45rem}.choices{gap:9px}.choice{min-height:91px;font-size:.9rem;padding:10px}.activity{padding:21px 17px}.copy{font-size:1.1rem}.do{font-size:.9rem}}
+@media(prefers-reduced-motion:reduce){.screen{animation:none}.choice{transition:none}}
 .salene-home-link{display:inline-block;margin-top:9px;color:var(--ink);text-decoration:none}.salene-home-link:hover,.salene-home-link:focus-visible{text-decoration:underline;outline:none}
 .salene-home-link{position:fixed;z-index:20;bottom:14px;left:50%;margin:0;padding:8px 11px;border:2px solid var(--line);border-radius:999px;background:#fffdf7;color:var(--ink);box-shadow:2px 2px 0 var(--line);font-size:10px;text-decoration:none;transform:translateX(-50%)}.salene-home-link:hover,.salene-home-link:focus-visible{background:var(--yellow);outline:2px solid var(--line);outline-offset:2px}
 .salene-home-link{position:static;z-index:auto;display:inline-block;margin-top:9px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--ink);font:inherit;text-decoration:none;transform:none}.salene-home-link:hover,.salene-home-link:focus-visible{background:transparent;text-decoration:underline;outline:none}
@@ -31,7 +33,7 @@ button,input,select{font-family:"Space Grotesk",system-ui,sans-serif}
 </head>
 <body>
 <div class="app">
-<header><div class="brand">a little something</div><button class="reset" onclick="home()">start over</button></header>
+<header><div class="brand">for parents of bored kids</div><button class="reset" onclick="home()">start over</button></header>
 <main id="main"></main>
 <footer>Less consuming. More doing.<br><a class="salene-home-link" href="https://saleney.github.io/">← Back to Salene’s Playground</a></footer>
 </div>
@@ -205,21 +207,35 @@ const activities=[
 {age:["mixed"],kids:["2","3+"],title:"Family Movie Without a Movie",emoji:"🎬",copy:"Make your own tiny scene.",do:"Younger kids act. Older kids direct. Everyone gets a role.",time:"20–30 min",energy:["make"],materials:["any"],adult:"supervise",mess:"none"}
 ];
 
-let state={age:null,kids:null};
+const normalizedActivities=activities.map(activity=>{
+ const minutes=(activity.time.match(/\d+/g)||[]).map(Number);
+ const places=[];
+ if(activity.materials.includes("outside")) places.push("outside");
+ if(activity.materials.includes("any")||activity.materials.includes("make")) places.push("home");
+ const supplies=[];
+ if(activity.materials.includes("any")) supplies.push("household");
+ if(activity.materials.includes("make")) supplies.push("art");
+ if(activity.materials.includes("outside")) supplies.push("none");
+ return {...activity,minutesMin:minutes[0]||0,minutesMax:minutes[1]||minutes[0]||0,places,supplies};
+});
+
+let state={age:null,kids:null,mode:null,stuff:null,time:null};
+let current=null;
 
 function render(x){document.getElementById("main").innerHTML=`<section class="screen">${x}</section>`}
 
 function home(){
- state={age:null,kids:null,mode:null,stuff:null};
+ state={age:null,kids:null,mode:null,stuff:null,time:null};
+ current=null;
  render(`
   <div class="mark">✦</div>
   <h1>Hmm.</h1>
-  <div class="question">What kind of moment are you having?</div>
+  <div class="question">What kind of moment are your kids having?</div>
   <div class="choices">
-   <button class="choice" onclick="pickMode('bored')"><span class="doodle pink" aria-hidden="true">✦</span>We're bored</button>
-   <button class="choice" onclick="pickMode('move')"><span class="doodle mint" aria-hidden="true">↟</span>We need to move</button>
-   <button class="choice" onclick="pickMode('make')"><span class="doodle yellow" aria-hidden="true">✎</span>We want to make something</button>
-   <button class="choice" onclick="pickMode('calm')"><span class="doodle blue" aria-hidden="true">☾</span>We need something calm</button>
+   <button class="choice" onclick="pickMode('bored')"><span class="doodle pink" aria-hidden="true">✦</span>They're bored</button>
+   <button class="choice" onclick="pickMode('move')"><span class="doodle mint" aria-hidden="true">↟</span>They need to move</button>
+   <button class="choice" onclick="pickMode('make')"><span class="doodle yellow" aria-hidden="true">✎</span>They want to make something</button>
+   <button class="choice" onclick="pickMode('calm')"><span class="doodle blue" aria-hidden="true">☾</span>They need something calm</button>
    <button class="choice" onclick="pickMode('explore')" style="grid-column:1/-1"><span class="doodle mint" aria-hidden="true">⌕</span>Let's see what happens</button>
   </div>
  `);
@@ -248,8 +264,7 @@ function pickAge(age){
    <button class="choice" onclick="pickStuff('around')"><span class="doodle pink" aria-hidden="true">⌂</span>Just what's around</button>
    <button class="choice" onclick="pickStuff('make')"><span class="doodle yellow" aria-hidden="true">✎</span>Stuff to make with</button>
    <button class="choice" onclick="pickStuff('outside')"><span class="doodle mint" aria-hidden="true">♧</span>We can go outside</button>
-   <button class="choice" onclick="pickStuff('somewhere')"><span class="doodle blue" aria-hidden="true">⇢</span>We can go somewhere</button>
-   <button class="choice" onclick="pickStuff('anything')" style="grid-column:1/-1"><span class="doodle pink" aria-hidden="true">✺</span>Anything goes</button>
+   <button class="choice" onclick="pickStuff('anything')"><span class="doodle blue" aria-hidden="true">✺</span>Anything goes</button>
   </div>
  `);
 }
@@ -258,9 +273,23 @@ function pickStuff(stuff){
  state.stuff=stuff;
  render(`
   <div class="mark">✦</div>
+  <div class="question">How much time do we actually have?</div>
+  <div class="choices">
+   <button class="choice" onclick="pickTime(5)"><span class="doodle pink" aria-hidden="true">·</span>Five minutes</button>
+   <button class="choice" onclick="pickTime(15)"><span class="doodle yellow" aria-hidden="true">:</span>About fifteen</button>
+   <button class="choice" onclick="pickTime(30)"><span class="doodle mint" aria-hidden="true">◌</span>Half an hour-ish</button>
+   <button class="choice" onclick="pickTime(60)"><span class="doodle blue" aria-hidden="true">∞</span>We have nowhere to be</button>
+  </div>
+ `);
+}
+function pickTime(time){
+ state.time=time;
+ const oneChild=state.age==="mixed"?"":`<button class="choice" onclick="pickKids('1')"><span class="doodle yellow" aria-hidden="true">●</span>1</button>`;
+ render(`
+  <div class="mark">✦</div>
   <div class="question">How many kids?</div>
   <div class="choices">
-   <button class="choice" onclick="pickKids('1')"><span class="doodle yellow" aria-hidden="true">●</span>1</button>
+   ${oneChild}
    <button class="choice" onclick="pickKids('2')"><span class="doodle blue" aria-hidden="true">◌◌</span>2</button>
    <button class="choice" onclick="pickKids('3+')"><span class="doodle mint" aria-hidden="true">✦✦</span>3+</button>
   </div>
@@ -274,10 +303,14 @@ function pickKids(kids){
  `);
  setTimeout(showActivity, 450);
 }
-function showActivity(){
- let pool=activities.filter(a=>a.age.includes(state.age)&&a.kids.includes(state.kids));
- if(!pool.length) pool=activities.filter(a=>a.age.includes(state.age));
-
+function eligibleActivities({relaxTime=false,relaxStuff=false}={}){
+ let pool=normalizedActivities.filter(a=>a.age.includes(state.age)&&a.kids.includes(state.kids));
+ if(!relaxTime) pool=pool.filter(a=>a.minutesMin<=state.time);
+ if(!relaxStuff){
+  if(state.stuff==="around") pool=pool.filter(a=>a.places.includes("home")&&a.supplies.includes("household"));
+  if(state.stuff==="make") pool=pool.filter(a=>a.places.includes("home")&&(a.supplies.includes("art")||a.supplies.includes("household")));
+  if(state.stuff==="outside") pool=pool.filter(a=>a.places.includes("outside"));
+ }
  const modeMap={
   move:["move"], make:["make"], calm:["calm"], explore:["explore"],
   bored:["move","make","explore","calm"]
@@ -286,17 +319,35 @@ function showActivity(){
   const modePool=pool.filter(a=>modeMap[state.mode].some(m=>a.energy && a.energy.includes(m)));
   if(modePool.length) pool=modePool;
  }
+ return pool;
+}
 
- const stuffMap={
-  around:["any"], make:["make","any"], outside:["outside","any"],
-  somewhere:["outside","any"], anything:["any","make","move","calm","explore"]
- };
- if(state.stuff && stuffMap[state.stuff]){
-  const stuffPool=pool.filter(a=>stuffMap[state.stuff].some(m=>a.materials && a.materials.includes(m)));
-  if(stuffPool.length) pool=stuffPool;
- }
+function showNoMatch(){
+ const moreTime=eligibleActivities({relaxTime:true});
+ const otherStuff=eligibleActivities({relaxStuff:true});
+ render(`
+  <div class="activity">
+   <div class="kicker">nothing quite fits</div>
+   <div class="activity-doodle" aria-hidden="true">?</div>
+   <h2>Hmm. Not this exact moment.</h2>
+   <p class="copy">I don't have an honest match for all of that yet.</p>
+   <div class="actions">
+    ${moreTime.length?`<button class="action" onclick="stretchTime()">Stretch the time</button>`:""}
+    ${otherStuff.length?`<button class="action" onclick="useDifferentStuff()">Use different stuff</button>`:""}
+    <button class="action secondary" onclick="home()">Start over</button>
+   </div>
+   <div class="note">Better no idea than the wrong idea.</div>
+  </div>
+ `);
+}
 
- if(!pool.length) pool=activities;
+function stretchTime(){state.time=60;showActivity();}
+function useDifferentStuff(){state.stuff="anything";showActivity();}
+
+function showActivity(options={}){
+ let pool=eligibleActivities(options);
+ if(!pool.length){showNoMatch();return;}
+ if(current&&pool.length>1) pool=pool.filter(a=>a.title!==current.title);
 
  const a=pool[Math.floor(Math.random()*pool.length)];
  current=a;
